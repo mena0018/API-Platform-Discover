@@ -7,7 +7,7 @@ use App\Repository\BookmarkRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
-#[ApiResource]
+#[ApiResource (order: ["name" => "ASC"])]
 class Bookmark
 {
     #[ORM\Id]
