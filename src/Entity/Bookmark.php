@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -16,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
     "name" => "ASC",
     "rateAverage" => "ASC"
 ])]
-#[ApiFilter (DateFilter::class, properties: ["creationDate"])]
+#[ApiFilter (DateFilter::class,   properties: ["creationDate"])]
+#[ApiFilter(BooleanFilter::class, properties: ["isPublic"])]
 class Bookmark
 {
     #[ORM\Id]
