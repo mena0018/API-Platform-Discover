@@ -4,17 +4,19 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\BookmarkRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookmarkRepository::class)]
-#[ApiResource]
+#[ApiResource(order: ["name" => "ASC"])]
 #[ApiFilter (OrderFilter::class, properties: [
     "name" => "ASC",
-    "creationDate" => "ASC",
     "rateAverage" => "ASC"
 ])]
+#[ApiFilter (DateFilter::class, properties: ["creationDate"])]
 class Bookmark
 {
     #[ORM\Id]
