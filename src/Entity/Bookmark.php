@@ -19,6 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
 ])]
 #[ApiFilter (DateFilter::class,   properties: ["creationDate"])]
 #[ApiFilter(BooleanFilter::class, properties: ["isPublic"])]
+#[ApiFilter(SearchFilter::class,  properties: [
+    'name' => 'partial',
+    "description" => "partial"
+])]
 class Bookmark
 {
     #[ORM\Id]
