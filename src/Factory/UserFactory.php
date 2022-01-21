@@ -5,9 +5,12 @@ namespace App\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Jdenticon\Identicon;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
+
+
 
 /**
  * @extends ModelFactory<User>
@@ -29,36 +32,38 @@ use Zenstruck\Foundry\Proxy;
  */
 final class UserFactory extends ModelFactory
 {
-    public function __construct()
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         parent::__construct();
-
-        // TODO inject services if required (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services)
+        $this->passwordHasher = $passwordHasher;
     }
 
     protected function getDefaults(): array
     {
-        $values = [];
-        for ($i = 0; $i < 3; $i++) {
-            $values [] = self::faker()->unique()->randomDigit();
-        }
+        $lastName = self::faker()->lastName();
+        $firstName = self::faker()->firstName();
+        $name = $lastName.$firstName;
+
         return [
-            'login' => "user".$values,
-            'roles' => [],
-            'password' => "test",
-            'firstname' => self::faker()->firstName(),
-            'lastname' => self::faker()->lastName(),
-            'avatar' => self::createAvatar(),
-            'mail' => self::faker()->email(),
+            'login'     => self::faker()->numerify('user###'),
+            'roles'     => [],
+            'password'  => "test",
+            'firstname' => $firstName,
+            'lastname'  => $lastName,
+            'avatar'    => self::createAvatar($name),
+            'mail'      => self::faker()->email(),
         ];
     }
 
     protected function initialize(): self
     {
-        // see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
         return $this
-            // ->afterInstantiate(function(User $user): void {})
-        ;
+            ->afterInstantiate(function(User $user) {
+                $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
+            })
+            ;
     }
 
     protected static function getClass(): string
