@@ -38,15 +38,18 @@ final class UserFactory extends ModelFactory
 
     protected function getDefaults(): array
     {
+        $values = [];
+        for ($i = 0; $i < 3; $i++) {
+            $values [] = self::faker()->unique()->randomDigit();
+        }
         return [
-            // TODO add your default values here (https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories)
-            'login' => self::faker()->text(),
+            'login' => "user".$values,
             'roles' => [],
-            'password' => self::faker()->text(),
-            'firstname' => self::faker()->text(),
-            'lastname' => self::faker()->text(),
-            'avatar' => self::faker()->text(),
-            'mail' => self::faker()->text(),
+            'password' => "test",
+            'firstname' => self::faker()->firstName(),
+            'lastname' => self::faker()->lastName(),
+            'avatar' => self::createAvatar(),
+            'mail' => self::faker()->email(),
         ];
     }
 
