@@ -11,16 +11,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
+    collectionOperations: ['get'],
     itemOperations: [
         'get'=> [
             'normalization_context' => ['groups' => ['get_User']]
         ],
         'put' => [
-            'denormalization_context' => ['groups' => ['set_User']]
+            'denormalization_context' => ['groups' => ['set_User']],
         ],
         'patch' => [
-            'denormalization_context' => ['groups' => ['set_User']]
-        ]]
+            'denormalization_context' => ['groups' => ['set_User']],
+        ]],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
