@@ -1,17 +1,27 @@
-html {
-    width: 100%;
-    font-family: Ubuntu, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+/* Reset */
+* {
+    box-sizing:border-box;
+    outline:none;
+    margin:0;
+    padding:0;
 }
-body {
+
+html, body {
+    background: #ececec;
+    font-family: 'Poppins', sans-serif;
+    font-size:var(--font-size);
     width: 100%;
     height: 100vh;
 }
 
 h1 {
     text-align: center;
-    font-size: 50px;
+    font-size: clamp(30px, 5.5vw, 80px);
     color: #0D1E49;
     margin: 50px 0;
+    font-weight: 900;
 }
 
 label {
@@ -19,6 +29,7 @@ label {
     font-size: 20px;
     color: #0D1E49;
     margin: 20px 10px 0;
+    font-weight: 600;
 }
 
 form {
@@ -39,7 +50,7 @@ button {
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     margin: 50px;
     box-shadow: 5px 5px 5px #0D1E49;
     transition: all .4s;
