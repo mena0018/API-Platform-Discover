@@ -7,40 +7,53 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     itemOperations: [
-        'get',
-        'put'
-    ]
+        'get'=> [
+            'normalization_context' => ['groups' => ['get_User']]
+        ],
+        'put' => [
+            'denormalization_context' => ['groups' => ['set_User']]
+        ],
+        'patch' => [
+            'denormalization_context' => ['groups' => ['set_User']]
+        ]]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['get_User', 'set_User'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['get_User', 'set_User'])]
     private $login;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(['set_User'])]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['get_User', 'set_User'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['get_User', 'set_User'])]
     private $lastname;
 
     #[ORM\Column(type: 'blob')]
     private $avatar;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['set_User'])]
     private $mail;
 
     public function getId(): ?int
