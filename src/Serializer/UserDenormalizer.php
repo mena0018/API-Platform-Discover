@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 
+
 /**
  * Classe permettant à l'utilisateur de pouvoir changer son mot de passe.
  */
@@ -43,8 +44,9 @@ abstract class UserDenormalizer implements ContextAwareDenormalizerInterface,
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
         $reflexionClass = new \ReflectionClass($type);
-        return !in_array(self::ALREADY_CALLED, $context)
-            and $reflexionClass->implementsInterface(User::class);
+        $alreadyCalled  = $context[self::ALREADY_CALLED] ?? false;
+
+        return $reflexionClass->implementsInterface(User::class) && $alreadyCalled === false;
     }
 
 }
