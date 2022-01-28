@@ -4,24 +4,22 @@ declare(strict_types=1);
 namespace App\Serialization\Denormalizer;
 
 use App\Entity\User;
-use ReflectionException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * Classe permettant à l'utilisateur de pouvoir changer son mot de passe.
  */
-abstract class UserDenormalizer implements ContextAwareDenormalizerInterface,
-    DenormalizerAwareInterface
+class UserDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
 
     private const ALREADY_CALLED = 'USER_DENORMALIZER_ALREADY_CALLED';
-    private $passwordHasher;
-    private $security;
+    private UserPasswordHasherInterface $passwordHasher;
+    private Security $security;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher, Security $security)
     {
@@ -30,22 +28,13 @@ abstract class UserDenormalizer implements ContextAwareDenormalizerInterface,
     }
 
     /**
-     * @param $data
-     * @param $type          /type de ressource cible
-     * @param null $format   /format d'origine
-     * @param array $context /ContextAwareDenormalizerInterface
-     * @return bool          /booleen indiquant si la classe doit transformer les données.
-     *
      * Retourne vrai si la clé self::ALREADY_CALLED n'est pas définie dans le contexte
      * et que le type ciblé est la classe User sinon retourne faux.
-     * @throws ReflectionException
      */
-    public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
-        $reflexionClass = new \ReflectionClass($type);
-        $alreadyCalled  = $context[self::ALREADY_CALLED] ?? false;
-
-        return $reflexionClass->implementsInterface(User::class) && $alreadyCalled === false;
+        $alreadyCalled = isset($context[self::ALREADY_CALLED]);
+        return $type == User::class && !$alreadyCalled;
     }
 
     /**
@@ -54,10 +43,18 @@ abstract class UserDenormalizer implements ContextAwareDenormalizerInterface,
      * du passwordHasher, dont le premier paramètre est l'utilisateur connecté récupéré à l'aide de la méthode getUser()
      * et Security) avant d'invoquer à nouveau la dénormalisation depuis la propriété denormalizer de l'instance courante.
      */
-    public function denormalize($data, $type, $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
     {
-        //  Ajoute la valeur true à la clé self::ALREADY_CALLED du context.
+        //Ajoute la valeur true à la clé self::ALREADY_CALLED du context.
         $context[self::ALREADY_CALLED] = true;
 
+        /** @var $user User */
+        $user = $this->security->getUser();
+
+        if (isset($data["password"])) {
+            $data["password"] = $this->passwordHasher->hashPassword($user, $data["password"]);
+        }
+
+        return $this->denormalizer->denormalize($data, $type, $format, $context);
     }
 }
