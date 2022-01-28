@@ -71,6 +71,12 @@
             "php bin/console doctrine:migrations:migrate --no-interaction",
             "php bin/console doctrine:fixtures:load --no-interaction"
         ],
+        "test": [
+            "APP_ENV=test php bin/console doctrine:database:drop --force",
+            "APP_ENV=test php bin/console doctrine:database:create",
+            "APP_ENV=test php bin/console doctrine:schema:create --quiet",
+            "php vendor/bin/phpunit --testdox --colors=always"
+        ],
         "start": "php -S 127.0.0.1:8000 -t public",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
