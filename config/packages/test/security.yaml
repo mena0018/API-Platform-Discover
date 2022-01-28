@@ -1,0 +1,4 @@
+security:
+  # Hashing Passwords Faster
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'plaintext'
