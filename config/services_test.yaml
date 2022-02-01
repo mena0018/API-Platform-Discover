@@ -1,0 +1,10 @@
+# This file is the entry point to configure your own services in test environment.
+
+# Import services.yaml
+imports:
+  - { resource: services.yaml }
+
+services:
+  # Disable logger to avoid showing errors during tests
+  Psr\Log\NullLogger: ~
+  logger: '@Psr\Log\NullLogger'
