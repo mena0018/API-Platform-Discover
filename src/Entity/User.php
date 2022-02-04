@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'method' => 'GET',
             'path'   => '/me',
             'controller' => GetMeController::class,
+            "security" => "is_granted('ROLE_USER') and object == user",
         ],
     ],
     itemOperations: [
