@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\GetAvatarController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -29,8 +30,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get_avatar' => [
             'method' => 'get',
             'path' => '/users/{id}/avatar',
-            'controller' => 'GetAvatarController::class'
-        ]]
+            'controller' => GetAvatarController::class,
+            "openapi_context" => [
+                'content' => [
+                    'image/png' => [
+                        'schema' => [
+                            'type' => 'string',
+                            'format' => 'binary',
+                        ]
+                    ]
+                ]
+            ],
+        ]
+    ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
