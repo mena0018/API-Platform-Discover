@@ -20,6 +20,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path'   => '/me',
             'controller' => GetMeController::class,
             "security" => "is_granted('ROLE_USER') and object == user",
+            'normalization_context' => [
+                'groups' => [
+                    'get_Me',
+                    'get_User'
+                ]
+            ]
         ],
     ],
     itemOperations: [
