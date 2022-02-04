@@ -25,7 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     'get_Me',
                     'get_User'
                 ]
-            ]
+            ],
+            'pagination_enabled' => false,
         ],
     ],
     itemOperations: [
