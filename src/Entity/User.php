@@ -41,7 +41,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ]
                 ]
             ],
-        ]
+            'formats:' => ['xml', 'jsonld', 'csv' =>
+                ['image/png']
+            ]
+        ],
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
