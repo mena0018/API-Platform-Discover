@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetAvatarController;
+use App\Controller\GetMeController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -12,7 +13,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    collectionOperations: ['get'],
+    collectionOperations: [
+        'get',
+        'get_me' => [
+            'method' => 'GET',
+            'path'   => '/me',
+            'controller' => GetMeController::class,
+        ],
+    ],
     itemOperations: [
         'get'=> [
             'normalization_context' => ['groups' => ['get_User']]
@@ -41,8 +49,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ]
                 ]
             ],
-            'formats:' => ['xml', 'jsonld', 'csv' =>
-                ['image/png']
+            'formats:' => [
+                'png' => 'image/png',
             ]
         ],
     ]
@@ -78,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['set_User'])]
+    #[Groups(['set_User', 'get_Me'])]
     private $mail;
 
     public function getId(): ?int
