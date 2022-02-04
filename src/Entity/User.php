@@ -25,7 +25,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'denormalization_context' => ['groups' => ['set_User']],
             "security" => "is_granted('ROLE_USER') and object == user",
             'normalization_context' => ['groups' => ['get_User']]
-        ]],
+        ],
+        'get_avatar' => [
+            'method' => 'get',
+            'path' => '/users/{id}/avatar',
+            'controller' => 'GetAvatarController::class'
+        ]]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
