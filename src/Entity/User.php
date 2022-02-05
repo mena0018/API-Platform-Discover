@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'method' => 'GET',
             'path'   => '/me',
             'controller' => GetMeController::class,
-            "security" => "is_granted('ROLE_USER') and object == user",
+            "security" => "is_granted('ROLE_USER')",
             'normalization_context' => [
                 'groups' => [
                     'get_Me',
@@ -27,6 +27,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 ]
             ],
             'pagination_enabled' => false,
+            "openapi_context" => [
+                'summary' => 'Accès aux informations personnelles',
+                'description' => 'La route permet de retourner l id, le login, le nom,
+                                  le prénom et le mail de l\'utilisateur connecté',
+                'responses' =>[
+                    '200' => [
+                        'description' => 'Succès, les informations personnelles de l\'utilisateur sont retournées'
+                    ],
+                    '401' => [
+                        'description' => 'Accès interdit, l\'utilisateur doit se connecter'
+                    ]
+                ]
+            ]
         ],
     ],
     itemOperations: [
