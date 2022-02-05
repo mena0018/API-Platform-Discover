@@ -90,6 +90,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['get_User', 'set_User'])]
+    #[Assert\Regex(
+        pattern: '[<,>,&,"]',
+        match: false,
+        message: 'Caractère non autorisé',
+    )]
     private $login;
 
     #[ORM\Column(type: 'json')]
@@ -101,10 +106,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['get_User', 'set_User'])]
+    #[Assert\Regex(
+        pattern: '[<,>,&,"]',
+        match: false,
+        message: 'Caractère non autorisé',
+    )]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['get_User', 'set_User'])]
+    #[Assert\Regex(
+        pattern: '[<,>,&,"]',
+        match: false,
+        message: 'Caractère non autorisé',
+    )]
     private $lastname;
 
     #[ORM\Column(type: 'blob')]
