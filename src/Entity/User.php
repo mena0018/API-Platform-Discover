@@ -49,12 +49,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'put' => [
             'denormalization_context' => ['groups' => ['set_User']],
             "security" => "is_granted('ROLE_USER') and object == user",
-            'normalization_context' => ['groups' => ['get_User']]
+            'normalization_context' => ['groups' => ['get_User', 'get_Me']]
         ],
         'patch' => [
             'denormalization_context' => ['groups' => ['set_User']],
             "security" => "is_granted('ROLE_USER') and object == user",
-            'normalization_context' => ['groups' => ['get_User']]
+            'normalization_context' => ['groups' => ['get_User', 'get_Me']]
         ],
         'get_avatar' => [
             'method' => 'get',
