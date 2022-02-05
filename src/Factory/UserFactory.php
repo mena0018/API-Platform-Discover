@@ -46,8 +46,13 @@ final class UserFactory extends ModelFactory
         $firstName = self::faker()->firstName();
         $name = $lastName.$firstName;
 
+//        $values = [];
+//        for ($i = 0; $i < 3; $i++) {
+//            $values []= self::faker()->unique()->randomDigit();
+//        }
+
         return [
-            'login'     => self::faker()->numerify('user###'),
+            'login'     => self::faker()->unique()->numerify('user###'),
             'roles'     => [],
             'password'  => "test",
             'firstname' => $firstName,
