@@ -14,6 +14,7 @@ class UserPutTest extends ApiPlatformTestCase
             'login',
             'firstname',
             'lastname',
+            'mail',
         ];
     }
 

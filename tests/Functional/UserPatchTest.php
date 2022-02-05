@@ -14,6 +14,7 @@ class UserPatchTest extends ApiPlatformTestCase
             'login',
             'firstname',
             'lastname',
+            'mail',
         ];
     }
 
