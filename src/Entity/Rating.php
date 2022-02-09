@@ -9,7 +9,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Table(name:"Rating")]
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
-
+#[UniqueEntity(
+    fields: ['user', 'bookmark']
+)]
 #[ApiResource]
 class Rating
 {
