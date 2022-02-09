@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\GetAvatarController;
 use App\Controller\GetMeController;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -91,8 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['get_User', 'set_User'])]
     #[Assert\Regex(
-        pattern: '[<,>,&,"]',
-        match: false,
+        pattern: '/^[^<,>,&,"]+$/',
         message: 'Caractère non autorisé',
     )]
     private $login;
@@ -107,8 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['get_User', 'set_User'])]
     #[Assert\Regex(
-        pattern: '[<,>,&,"]',
-        match: false,
+        pattern: '/^[^<,>,&,"]+$/',
         message: 'Caractère non autorisé',
     )]
     private $firstname;
@@ -116,8 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['get_User', 'set_User'])]
     #[Assert\Regex(
-        pattern: '[<,>,&,"]',
-        match: false,
+        pattern: '/^[^<,>,&,"]+$/',
         message: 'Caractère non autorisé',
     )]
     private $lastname;
@@ -131,6 +130,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         message: 'The email {{ value }} is not a valid email.',
     )]
     private $mail;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rating::class, orphanRemoval: true)]
+    private $ratings;
+
+    public function __construct()
+    {
+        $this->ratings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -246,6 +253,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMail(string $mail): self
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getUser() === $this) {
+                $rating->setUser(null);
+            }
+        }
 
         return $this;
     }
