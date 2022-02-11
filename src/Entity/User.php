@@ -90,7 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['get_User', 'set_User'])]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'string', length: 180)]
     #[Groups(['get_User', 'set_User'])]
     #[Assert\Regex(
         pattern: '/^[^<,>,&,"]+$/',
