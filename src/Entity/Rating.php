@@ -14,7 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(
     fields: ['user', 'bookmark']
 )]
-#[ApiResource]
+#[ApiResource(
+ collectionOperations: [
+    'post' => [
+        "security" => "is_granted('ROLE_USER')",
+    ]]
+)]
 class Rating
 {
     #[ORM\Id]
