@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Table(name:"Rating")]
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
@@ -29,6 +31,8 @@ class Rating
     private $user;
 
     #[ORM\Column(type: 'smallint')]
+    #[Assert\GreaterThanOrEqual(0)]
+    #[Assert\LessThan(11)]
     private $value;
 
     public function getId(): ?int
