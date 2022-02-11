@@ -55,3 +55,4 @@ class RatingGetTest extends ApiPlatformTestCase
     }
 }
 
+
