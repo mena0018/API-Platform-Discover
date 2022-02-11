@@ -43,7 +43,7 @@ class UserDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
      * du passwordHasher, dont le premier paramètre est l'utilisateur connecté récupéré à l'aide de la méthode getUser()
      * et Security) avant d'invoquer à nouveau la dénormalisation depuis la propriété denormalizer de l'instance courante.
      */
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
     {
         //Ajoute la valeur true à la clé self::ALREADY_CALLED du context.
         $context[self::ALREADY_CALLED] = true;
