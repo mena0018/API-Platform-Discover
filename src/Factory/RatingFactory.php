@@ -40,7 +40,7 @@ final class RatingFactory extends ModelFactory
         return [
             'bookmark' => BookmarkFactory::createOne(),
             'user' =>  UserFactory::createOne(),
-            'value' => self::faker()->numberBetween(1, 10)
+            'value' => self::faker()->numberBetween(1, 10),
         ];
 
     }
