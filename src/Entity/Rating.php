@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name:"Rating")]
+#[ORM\Table(name:"rating")]
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 #[UniqueEntity(
     fields: ['user', 'bookmark']
