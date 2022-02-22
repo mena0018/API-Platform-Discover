@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  collectionOperations: [
      'get',
      'post' => [
-        "security" => "is_granted('ROLE_USER') and object == user",
+        "security" => "is_granted('ROLE_USER')",
     ]]
 )]
 class Rating
