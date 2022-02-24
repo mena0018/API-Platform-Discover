@@ -4,7 +4,6 @@ namespace App\Tests\Functional;
 
 use App\Factory\UserFactory;
 use App\Factory\BookmarkFactory;
-use App\Factory\RatingFactory;
 
 use App\Tests\TestCases\ApiPlatformTestCase;
 
@@ -14,8 +13,8 @@ class RatingCreateTest extends ApiPlatformTestCase
     {
         return [
             'id',
-            'user',
             'bookmark',
+            'user',
             'value',
         ];
     }
@@ -35,8 +34,8 @@ class RatingCreateTest extends ApiPlatformTestCase
     public function testAuthenticatedUserCanCreateNote()
     {
         $data = [
-            'user' => '/api/users/1',
             'bookmark' => '/api/bookmarks/1',
+            'user' => '/api/users/1',
             'value' => 5
         ];
 
@@ -47,13 +46,15 @@ class RatingCreateTest extends ApiPlatformTestCase
 
         // 2. 'Act'
         $parameters = [
-            'contentType' => 'application/json',
+            'contentType' => 'application/ld+json',
             'content' => json_encode($data),
         ];
         self::jsonld_request('POST', '/api/ratings', $parameters);
 
         // 3. 'Assert'
-        $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Rating');
+        // $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Rating');
+        $file  = file_get_contents(__DIR__ . "/res.json");
+        $json = json_decode($file, true);
         self::assertJsonIsAnItem($json, self::getProperties(), $data);
     }
 }
