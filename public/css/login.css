@@ -35,7 +35,7 @@ label {
 form {
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 100%;
     align-items: center;
     justify-content: center;
     margin: auto;
@@ -76,4 +76,23 @@ input {
 input:hover {
     box-shadow: none;
     cursor: pointer;
+}
+
+.alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    background-color: #528AAE;
+    color: #ececec;
+    opacity: 1;
+    width: 100%;
+}
+
+.alert-success {
+    background-color: #528AAE;
+}
+
+.alert-error {
+    background-color: #cb2121;
 }
