@@ -9,17 +9,26 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name:"rating")]
+#[ORM\Table(name: "rating")]
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 #[UniqueEntity(
     fields: ['user', 'bookmark']
 )]
 #[ApiResource(
- collectionOperations: [
-     'get',
-     'post' => [
-        "security" => "is_granted('ROLE_USER')",
-    ]]
+    collectionOperations: [
+        'get',
+        'post' => [
+            "security" => "is_granted('ROLE_USER')",
+        ]],
+    itemOperations: [
+        'get',
+        'patch' => [
+            "security" => "is_granted('ROLE_USER') and object.getUser() == user",
+        ],
+        'put' => [
+            "security" => "is_granted('ROLE_USER') and object.getUser() == user",
+        ],
+    ]
 )]
 class Rating
 {
