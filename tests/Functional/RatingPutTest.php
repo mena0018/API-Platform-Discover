@@ -20,4 +20,18 @@ class RatingPutTest extends ApiPlatformTestCase
         // 3. 'Assert'
         $this->assertResponseStatusCodeSame(401);
     }
+
+    public function testAuthenticatedUserCantPutOtherUser()
+    {
+        // 1. 'Arrange'
+        $user = UserFactory::createOne()->object();
+        UserFactory::createOne();
+        self::$client->loginUser($user);
+
+        // 2. 'Act'
+        self::jsonld_request('PUT', '/api/users/2');
+
+        // 3. 'Assert'
+        $this->assertResponseStatusCodeSame(403);
+    }
 }
