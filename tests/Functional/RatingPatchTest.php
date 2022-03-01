@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-use App\Factory\BookmarkFactory;
+use App\Factory\UserFactory;
 use App\Factory\RatingFactory;
 use App\Tests\TestCases\ApiPlatformTestCase;
-use App\Factory\UserFactory;
 
 class RatingPatchTest extends ApiPlatformTestCase
 {
@@ -49,12 +48,19 @@ class RatingPatchTest extends ApiPlatformTestCase
     public function testAuthenticatedUserCanPatchOwnData()
     {
         // 1. 'Arrange'
-        $dataInit = ['firstname' => 'firstname1', 'lastname' => 'lastname1'];
-        $user = UserFactory::createOne($dataInit)->object();
+        $user = UserFactory::createOne()->object();
         self::$client->loginUser($user);
 
+        $dataInit = [
+            'user' => $user,
+            'value' => 5
+        ];
+        RatingFactory::createOne($dataInit);
+
         // 2. 'Act'
-        $dataPatch = ['lastname' => 'lastname2'];
+        $dataPatch = [
+            'value' => 7
+        ];
         $parameters = [
             'contentType' => 'application/merge-patch+json',
             'content' => json_encode($dataPatch),
@@ -62,7 +68,7 @@ class RatingPatchTest extends ApiPlatformTestCase
         self::jsonld_request('PATCH', '/api/ratings/1', $parameters);
 
         // 3. 'Assert'
-        $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Ratings', '/api/ratings/1');
-        self::assertJsonIsAnItem($json, self::getProperties(), array_merge($dataInit, $dataPatch));
+        $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Rating', '/api/ratings/1');
+        self::assertJsonIsAnItem($json, self::getProperties(),  $dataPatch);
     }
 }

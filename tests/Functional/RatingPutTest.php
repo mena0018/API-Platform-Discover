@@ -9,6 +9,16 @@ use App\Tests\TestCases\ApiPlatformTestCase;
 
 class RatingPutTest extends ApiPlatformTestCase
 {
+    protected static function getProperties(): array
+    {
+        return [
+            'id',
+            'bookmark',
+            'user',
+            'value',
+        ];
+    }
+
     public function testAnonymousUserCantPutRating()
     {
         // 1. 'Arrange'
@@ -33,5 +43,32 @@ class RatingPutTest extends ApiPlatformTestCase
 
         // 3. 'Assert'
         $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testAuthenticatedUserCanPatchOwnData()
+    {
+        // 1. 'Arrange'
+        $user = UserFactory::createOne()->object();
+        self::$client->loginUser($user);
+
+        $dataInit = [
+            'user' => $user,
+            'value' => 5
+        ];
+        RatingFactory::createOne($dataInit);
+
+        // 2. 'Act'
+        $dataPatch = [
+            'value' => 7
+        ];
+        $parameters = [
+            'contentType' => 'application/json',
+            'content' => json_encode($dataPatch),
+        ];
+        self::jsonld_request('PUT', '/api/ratings/1', $parameters);
+
+        // 3. 'Assert'
+        $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Rating', '/api/ratings/1');
+        self::assertJsonIsAnItem($json, self::getProperties(),  $dataPatch);
     }
 }
