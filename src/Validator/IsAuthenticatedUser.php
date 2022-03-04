@@ -13,5 +13,5 @@ class IsAuthenticatedUser extends Constraint
      * Any public properties become valid options for the annotation.
      * Then, use these in your validator class.
      */
-    public $message = 'The value "{{ value }}" is not valid.';
+    public $message = 'L\'utilisateur "{{ user }}" devrait être connecté.';
 }
