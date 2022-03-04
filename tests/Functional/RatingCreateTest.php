@@ -2,7 +2,9 @@
 
 namespace App\Tests\Functional;
 
+use App\Entity\User;
 use App\Factory\BookmarkFactory;
+use App\Factory\RatingFactory;
 use App\Factory\UserFactory;
 use App\Tests\TestCases\ApiPlatformTestCase;
 
@@ -116,6 +118,32 @@ class RatingCreateTest extends ApiPlatformTestCase
         $user = UserFactory::createOne()->object();
         BookmarkFactory::createOne()->object();
         self::$client->loginUser($user);
+
+        // 2. 'Act'
+        $parameters = [
+            'contentType' => 'application/ld+json',
+            'content' => json_encode($data),
+        ];
+        self::jsonld_request('POST', '/api/ratings', $parameters);
+
+        // 3. 'Assert'
+        $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testAuthenticatedUserCantCreateForOthers()
+    {
+        $data = [
+            'user' => '/api/users/2',
+            'bookmark' => '/api/bookmarks/1',
+            'value' => 5,
+        ];
+
+        // 1. 'Arrange'
+        $user = UserFactory::createOne()->object();
+        self::$client->loginUser($user);
+        BookmarkFactory::createOne();
+
+        UserFactory::createOne();
 
         // 2. 'Act'
         $parameters = [
