@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RatingRepository;
+use App\Validator\IsAuthenticatedUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -46,6 +47,7 @@ class Rating
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ratings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[IsAuthenticatedUser]
     private $user;
 
     #[ORM\Column(type: 'smallint')]
