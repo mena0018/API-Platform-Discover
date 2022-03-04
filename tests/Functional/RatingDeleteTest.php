@@ -25,18 +25,20 @@ class RatingDeleteTest extends ApiPlatformTestCase
 
     public function testAuthenticatedUserCantDeleteOtherUserMarks()
     {
+        $data = [
+            'user' => UserFactory::createOne(),
+        ];
+
         // 1. 'Arrange'
         $user = UserFactory::createOne()->object();
         self::$client->loginUser($user);
-        RatingFactory::createOne()->object();
-
-        UserFactory::createOne()->object();
-        RatingFactory::createOne()->object();
+        RatingFactory::createOne($data);
 
         // 2. 'Act'
-        self::jsonld_request('DELETE', '/api/ratings/2');
+        self::jsonld_request('DELETE', '/api/ratings/1');
 
         // 3. 'Assert'
         $this->assertResponseStatusCodeSame(403);
     }
+
 }

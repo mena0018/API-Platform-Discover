@@ -33,12 +33,14 @@ class RatingPatchTest extends ApiPlatformTestCase
 
     public function testAuthenticatedUserCantPatchOtherRating()
     {
+        $data = [
+            'user' => UserFactory::createOne(),
+        ];
+
         // 1. 'Arrange'
         $user = UserFactory::createOne()->object();
         self::$client->loginUser($user);
-        RatingFactory::createOne();
-        UserFactory::createOne();
-
+        RatingFactory::createOne($data);
 
         // 2. 'Act'
         self::jsonld_request('PATCH', '/api/ratings/1');
