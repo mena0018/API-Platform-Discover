@@ -2,7 +2,6 @@
 
 namespace App\Tests\Functional;
 
-use App\Entity\User;
 use App\Factory\BookmarkFactory;
 use App\Factory\RatingFactory;
 use App\Factory\UserFactory;
@@ -154,5 +153,35 @@ class RatingCreateTest extends ApiPlatformTestCase
 
         // 3. 'Assert'
         $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testAuthenticatedUserCanCreateNoteWithoutUserData()
+    {
+        $data = [
+            'bookmark' => '/api/bookmarks/1',
+            'value' => 5
+        ];
+
+        $dataPost = [
+            'user' => '/api/users/1',
+            'bookmark' => '/api/bookmarks/1',
+            'value' => 5
+        ];
+
+        // 1. 'Arrange'
+        $user = UserFactory::createOne()->object();
+        self::$client->loginUser($user);
+        BookmarkFactory::createOne()->object();
+
+        // 2. 'Act'
+        $parameters = [
+            'contentType' => 'application/ld+json',
+            'content' => json_encode($data),
+        ];
+        self::jsonld_request('POST', '/api/ratings', $parameters);
+
+        // 3. 'Assert'
+        $json = self::lastJsonResponseWithAsserts(ApiPlatformTestCase::ENTITY, 'Rating', '/api/ratings/1');
+        self::assertJsonIsAnItem($json, self::getProperties(), $dataPost);
     }
 }
