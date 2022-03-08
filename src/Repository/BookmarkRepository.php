@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Bookmark;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 /**
  * @method Bookmark|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +21,14 @@ class BookmarkRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Bookmark::class);
     }
+
+    public function updateRateAverage(Bookmark $bookmarkId): void
+    {
+        $bookmark = $this->find($bookmarkId);
+        $rateAverage = $bookmark->getRateAverage();
+        $bookmark->setRateAverage($rateAverage);
+    }
+
 
     // /**
     //  * @return Bookmark[] Returns an array of Bookmark objects
