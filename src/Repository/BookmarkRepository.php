@@ -3,10 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Bookmark;
+use App\Entity\Rating;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityManagerInterface;
 
 
 /**
@@ -22,11 +21,23 @@ class BookmarkRepository extends ServiceEntityRepository
         parent::__construct($registry, Bookmark::class);
     }
 
-    public function updateRateAverage(Bookmark $bookmarkId): void
+    public function updateRateAverage(int $bookmarkId)
     {
-        $bookmark = $this->find($bookmarkId);
-        $rateAverage = $bookmark->getRateAverage();
-        $bookmark->setRateAverage($rateAverage);
+        $moyenne = $this->getEntityManager()->getRepository(Rating::class)->createQueryBuilder('r')
+            ->select('avg(r.value)')
+            ->from('Rating', 'r')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $this->createQueryBuilder('b')
+            ->update('Bookmark', 'b')
+            ->set('b.rateAverage',  $moyenne)
+            ->where('b.id = :bookmarkId')
+            ->setParameter('bookmarkId', $bookmarkId)
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 
